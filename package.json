@@ -1,0 +1,20 @@
+{
+  "name": "textswitch",
+  "version": "1.2.0",
+  "description": "Extensão TextSwitch para Google Chrome - Expanda textos e respostas rápidas automaticamente usando atalhos inteligentes e campos dinâmicos.",
+  "private": true,
+  "scripts": {
+    "build": "node build.js",
+    "test": "node --test tests/templates.test.js"
+  },
+  "keywords": [
+    "chrome-extension",
+    "textswitch",
+    "snippets",
+    "shortcuts",
+    "text-expander",
+    "text-blaze"
+  ],
+  "author": "",
+  "license": "MIT"
+}

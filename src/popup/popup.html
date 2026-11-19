@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TextSwitch</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <!-- Header Principal -->
+    <header class="app-header">
+      <div class="brand">
+        <img src="../icons/icon-32.png" alt="TextSwitch Logo" class="brand-icon" />
+        <div class="brand-info">
+          <h1>Text<span class="highlight">Switch</span></h1>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="newBtn" class="btn-head primary" title="Criar novo template">
+          <span class="icon">+</span> Novo
+        </button>
+        <button id="importBtn" class="btn-head" title="Importar arquivo JSON de templates">
+          <span class="icon">📥</span> Importar
+        </button>
+        <button id="openOptionsBtn" class="btn-head" title="Abrir painel completo de configurações">
+          <span class="icon">⚙</span> Configurações
+        </button>
+        <input id="fileInput" type="file" accept="application/json" hidden />
+      </div>
+    </header>
+
+    <!-- Barra de Pesquisa Rápida -->
+    <div class="search-section">
+      <div class="search-wrapper">
+        <span class="search-icon">⌕</span>
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Buscar atalhos ou textos... (pressione /)"
+          aria-label="Buscar templates"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+
+    <!-- Barra de Status e Ações -->
+    <div class="status-bar">
+      <span id="countLabel" class="count-badge">0 atalhos salvos</span>
+      <div class="status-links">
+        <button id="exportBtn" class="btn-text" title="Exportar backup JSON">Exportar Backup</button>
+      </div>
+    </div>
+
+    <!-- Lista de Templates com Suporte a Drag & Drop de JSON -->
+    <main id="templateList" class="template-list" aria-live="polite">
+      <div id="dropOverlay" class="drop-overlay" hidden>
+        <div class="drop-content">
+          <span class="drop-icon">📥</span>
+          <strong>Solte o arquivo JSON aqui</strong>
+          <small>Importar templates no TextSwitch</small>
+        </div>
+      </div>
+    </main>
+
+    <!-- Estado Vazio -->
+    <div id="emptyState" class="empty-state" hidden>
+      <div class="empty-icon">⇄</div>
+      <h3>Nenhum atalho encontrado</h3>
+      <p>Crie um novo template ou importe seu arquivo de templates em JSON.</p>
+      <div class="empty-actions">
+        <button id="emptyNewBtn" class="btn primary">Criar primeiro template</button>
+        <button id="emptyImportBtn" class="btn secondary">Importar JSON</button>
+      </div>
+    </div>
+
+    <!-- Rodapé com Acesso Rápido às Configurações -->
+    <footer class="app-footer">
+      <button id="footerSettingsBtn" class="footer-settings-link" type="button">
+        <span>⚙ Abrir Painel Completo de Configurações</span>
+      </button>
+    </footer>
+
+    <!-- Modal de Criação / Edição -->
+    <dialog id="editorModal">
+      <form id="templateForm" method="dialog">
+        <div class="modal-header">
+          <h2 id="modalTitle">Criar Template</h2>
+          <button type="button" class="btn-close" id="closeModalBtn" aria-label="Fechar">✕</button>
+        </div>
+
+        <div class="modal-body">
+          <label class="form-group">
+            <span class="label-text">Nome do template</span>
+            <input
+              id="titleInput"
+              type="text"
+              required
+              placeholder="Ex.: Resposta de atendimento"
+              autocomplete="off"
+            />
+          </label>
+
+          <label class="form-group">
+            <span class="label-text">Atalho de disparo</span>
+            <input
+              id="shortcutInput"
+              type="text"
+              required
+              placeholder="/resposta ou /suporte"
+              autocomplete="off"
+            />
+            <small class="helper-text">Prefira iniciar com / ou - para evitar disparos acidentais (ex: /ola, /pix).</small>
+          </label>
+
+          <!-- Seção de Variáveis e Campos Dinâmicos -->
+          <fieldset class="variables-picker">
+            <legend>Variáveis & Campos Dinâmicos</legend>
+
+            <div class="token-toolbar">
+              <span class="token-toolbar-label">Inserir no texto:</span>
+              <div class="token-buttons">
+                <button type="button" class="btn-token" data-token="{data}">+ Data</button>
+                <button type="button" class="btn-token" data-token="{hora}">+ Hora</button>
+                <button type="button" class="btn-token" id="btnOpenTextBuilder">+ Campo Texto</button>
+                <button type="button" class="btn-token highlight-token" id="btnOpenMenuBuilder">+ Lista de Opções (Menu)</button>
+              </div>
+            </div>
+
+            <!-- Construtor de Menu Dropdown no Popup -->
+            <div id="menuBuilderBox" class="builder-box" hidden>
+              <div class="builder-box-head">
+                <strong>📋 Lista de Opções (Menu)</strong>
+                <button type="button" class="btn-close-mini" id="btnCloseMenuBuilder">✕</button>
+              </div>
+              <div class="builder-inputs">
+                <input type="text" id="menuNameInput" placeholder="Nome do campo (ex: Turno)" autocomplete="off" />
+                <input type="text" id="menuOptionsInput" placeholder="Opções separadas por vírgula (ex: Manhã, Tarde)" autocomplete="off" />
+              </div>
+              <div class="builder-box-foot">
+                <button type="button" class="btn btn-sm primary" id="btnInsertMenu">Inserir Menu</button>
+              </div>
+            </div>
+
+            <!-- Construtor de Campo de Texto no Popup -->
+            <div id="textBuilderBox" class="builder-box" hidden>
+              <div class="builder-box-head">
+                <strong>✏️ Campo de Texto</strong>
+                <button type="button" class="btn-close-mini" id="btnCloseTextBuilder">✕</button>
+              </div>
+              <div class="builder-inputs">
+                <input type="text" id="customTextFieldInput" placeholder="Nome do campo (ex: Nome do Cliente)" autocomplete="off" />
+              </div>
+              <div class="builder-box-foot">
+                <button type="button" class="btn btn-sm primary" id="btnInsertCustomText">Inserir Campo</button>
+              </div>
+            </div>
+
+            <div class="formats-compact">
+              <label>
+                <span>Data ({data}):</span>
+                <select id="dateFormat">
+                  <option value="dd/mm/yyyy">DD/MM/AAAA</option>
+                  <option value="yyyy-mm-dd">AAAA-MM-DD</option>
+                  <option value="month">Por extenso</option>
+                </select>
+              </label>
+              <label>
+                <span>Hora ({hora}):</span>
+                <select id="timeFormat">
+                  <option value="hh:mm">HH:MM</option>
+                  <option value="hh:mm:ss">HH:MM:SS</option>
+                </select>
+              </label>
+            </div>
+          </fieldset>
+
+          <label class="form-group">
+            <span class="label-text">Texto do template</span>
+            <textarea
+              id="textInput"
+              required
+              rows="6"
+              placeholder="Digite o texto que será inserido ao digitar o atalho..."
+            ></textarea>
+          </label>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn" id="cancelBtn">Cancelar</button>
+          <button type="submit" class="btn primary">Salvar Template</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div id="toast" class="toast" role="status"></div>
+
+    <script src="../shared/templates.js"></script>
+    <script src="../shared/storage.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

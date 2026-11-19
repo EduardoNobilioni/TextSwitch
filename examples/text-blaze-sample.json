@@ -1,0 +1,68 @@
+{
+  "version": 7,
+  "folders": [
+    {
+      "name": "Atendimento & Saudações",
+      "info": "Modelos padrão para início e encerramento de conversas.",
+      "app": "TEXT",
+      "snippets": [
+        {
+          "name": "Boas-vindas Geral",
+          "shortcut": "/ola",
+          "type": "text",
+          "text": "Olá! Seja muito bem-vindo(a). Como posso ajudar você hoje?"
+        },
+        {
+          "name": "Bom dia",
+          "shortcut": "/bomdia",
+          "type": "text",
+          "text": "Bom dia! Tudo bem? Meu nome é {formtext: Seu Nome; default=Equipe de Suporte}, como posso ajudar?"
+        },
+        {
+          "name": "Agradecimento e Encerramento",
+          "shortcut": "/obrigado",
+          "type": "text",
+          "text": "Agradecemos pelo contato e pela preferência! Se precisar de algo mais, estamos à disposição. Tenha um excelente dia!"
+        }
+      ]
+    },
+    {
+      "name": "Formulários Dinâmicos & Agendamentos",
+      "info": "Exemplos demonstrando campos dinâmicos de data, menu seletor e preenchimento de texto.",
+      "app": "TEXT",
+      "snippets": [
+        {
+          "name": "Agendamento de Reunião",
+          "shortcut": "/agendamento",
+          "type": "text",
+          "text": "Olá {formtext: Nome do Cliente}! Gostaria de confirmar nossa reunião para o dia {formdate: DD/MM/YYYY} no período {formmenu: da manhã (09:00); default=da tarde (14:30); do final do dia (17:00); name=Horario}.\n\nPauta principal: {formparagraph: Resumo dos tópicos}\n\nFico no aguardo da sua confirmação!"
+        },
+        {
+          "name": "Registro de Ticket / Chamado",
+          "shortcut": "/ticket",
+          "type": "text",
+          "text": "Chamado #{formtext: Número do Chamado; default=0001} registrado em {data} às {hora}.\nStatus: {formmenu: Em Análise; default=Aberto; Concluído; name=Status}\nPrioridade: {formmenu: Baixa; default=Média; Alta; Urgente; name=Prioridade}\nObservações: {formparagraph: Detalhes do atendimento}"
+        }
+      ]
+    },
+    {
+      "name": "Financeiro & Operacional",
+      "info": "Respostas rápidas para dados de pagamento e links úteis.",
+      "app": "TEXT",
+      "snippets": [
+        {
+          "name": "Chave PIX",
+          "shortcut": "/pix",
+          "type": "text",
+          "text": "Seguem os dados para pagamento via PIX:\nChave: contato@minhaempresa.com.br\nTipo: E-mail\nFavorecido: Minha Empresa LTDA\n\nPor gentileza, nos envie o comprovante assim que concluir!"
+        },
+        {
+          "name": "Assinatura de E-mail com Data",
+          "shortcut": "/assinatura",
+          "type": "text",
+          "text": "Atenciosamente,\nEquipe TextSwitch\nEnviado em {data_hora}"
+        }
+      ]
+    }
+  ]
+}

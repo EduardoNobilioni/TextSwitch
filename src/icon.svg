@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <!-- Gradiente oficial TextSwitch: Indigo (#4f46e5) para Coral/Pink (#ec4899) -->
+    <linearGradient id="tsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4f46e5"/>
+      <stop offset="50%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+
+  <!-- Fundo com cantos arredondados estilo app moderno -->
+  <rect width="128" height="128" rx="28" fill="url(#tsGrad)"/>
+
+  <!-- Símbolo TextSwitch: Letra 'T' nítida com setas bidirecionais no travessão -->
+  <g fill="#ffffff" filter="url(#shadow)">
+    <!-- Haste vertical central do T -->
+    <path d="M 55 42 h 18 v 54 a 8 8 0 0 1 -8 8 h -2 a 8 8 0 0 1 -8 -8 Z"/>
+    <!-- Travessão horizontal do T -->
+    <rect x="34" y="32" width="60" height="16"/>
+    <!-- Ponta de seta esquerda (←) -->
+    <polygon points="18,40 38,24 38,56"/>
+    <!-- Ponta de seta direita (→) -->
+    <polygon points="110,40 90,24 90,56"/>
+  </g>
+</svg>

@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Configurações — TextSwitch</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <!-- Barra lateral -->
+      <aside class="sidebar">
+        <div class="brand">
+          <img src="../icons/icon-48.png" alt="TextSwitch Logo" class="brand-icon" />
+          <div class="brand-text">
+            <strong>Text<span class="highlight">Switch</span></strong>
+            <small>v1.2.0 • Smart Text Expander</small>
+          </div>
+        </div>
+
+        <nav class="nav-menu" aria-label="Navegação de configurações">
+          <button class="nav-item active" data-tab="tab-templates" type="button">
+            <span class="nav-icon">📋</span>
+            <span>Meus Templates</span>
+          </button>
+          <button class="nav-item" data-tab="tab-guide" type="button">
+            <span class="nav-icon">💡</span>
+            <span>Como Funciona</span>
+          </button>
+          <button class="nav-item" data-tab="tab-privacy" type="button">
+            <span class="nav-icon">🛡️</span>
+            <span>Privacidade & Local</span>
+          </button>
+        </nav>
+
+        <!-- Selos de Arquitetura -->
+        <div class="sidebar-badges">
+          <div class="badge-pill local">
+            <span class="dot">●</span> 100% Offline & Local
+          </div>
+          <div class="badge-pill opensource">
+            <span class="dot">●</span> Código Aberto (MIT)
+          </div>
+          <div class="badge-pill zero-deps">
+            <span class="dot">●</span> Zero Dependências
+          </div>
+        </div>
+
+        <div class="sidebar-stats">
+          <div class="stat-card">
+            <span class="stat-label">Total de Templates</span>
+            <strong id="totalTemplatesStat" class="stat-value">0</strong>
+          </div>
+        </div>
+
+        <div class="sidebar-help">
+          <h4>Dica rápida:</h4>
+          <p>Digite seu atalho (ex: <code>/ola</code> ou <code>/pix</code>) em qualquer campo e pressione <kbd>Espaço</kbd>, <kbd>Enter</kbd> ou <kbd>Tab</kbd>.</p>
+        </div>
+      </aside>
+
+      <!-- Painel Principal -->
+      <main class="main-panel">
+        <!-- ================= ABA 1: MEUS TEMPLATES ================= -->
+        <div id="tab-templates" class="tab-content active">
+          <header class="panel-header">
+            <div>
+              <span class="eyebrow">PAINEL DE CONTROLE</span>
+              <h1>Gerenciamento de Templates</h1>
+            </div>
+            <div class="header-actions">
+              <button id="importBtn" class="btn" type="button" title="Importar arquivo JSON de templates">
+                <span class="btn-icon">📥</span> Importar JSON
+              </button>
+              <button id="exportBtn" class="btn" type="button" title="Exportar backup completo em JSON">
+                <span class="btn-icon">📤</span> Exportar Backup
+              </button>
+              <button id="newBtn" class="btn primary" type="button" title="Criar um novo atalho de texto">
+                <span class="btn-icon">+</span> Novo Template
+              </button>
+              <input id="fileInput" type="file" accept="application/json" hidden />
+            </div>
+          </header>
+
+          <!-- Banner Informativo de Arquitetura Local -->
+          <div class="privacy-banner">
+            <span class="banner-icon">🔒</span>
+            <div class="banner-text">
+              <strong>Seus dados nunca saem deste computador.</strong>
+              <span>O TextSwitch opera de forma totalmente local no seu navegador através de <code>chrome.storage.local</code>. Sem servidores externos, sem rastreamento e sem mensalidades.</span>
+            </div>
+          </div>
+
+          <!-- Barra de busca e filtros -->
+          <section class="toolbar">
+            <div class="search-box">
+              <span class="search-icon">⌕</span>
+              <input
+                id="searchInput"
+                type="search"
+                placeholder="Buscar por nome, atalho ou conteúdo do template..."
+                aria-label="Buscar templates"
+                autocomplete="off"
+              />
+            </div>
+            <span id="countLabel" class="count-label">Carregando templates...</span>
+          </section>
+
+          <!-- Estado vazio -->
+          <section id="emptyState" class="empty-state" hidden>
+            <div class="empty-mark">⇄</div>
+            <h2>Nenhum template encontrado</h2>
+            <p>Crie um novo template agora ou importe seu arquivo de templates em formato JSON.</p>
+            <div class="empty-actions">
+              <button id="emptyNewBtn" class="btn primary" type="button">+ Criar primeiro template</button>
+              <button id="emptyImportBtn" class="btn" type="button">📥 Importar arquivo JSON</button>
+            </div>
+          </section>
+
+          <!-- Tabela de templates -->
+          <section class="table-container">
+            <table class="templates-table">
+              <thead>
+                <tr>
+                  <th style="width: 140px;">Atalho</th>
+                  <th style="width: 220px;">Nome</th>
+                  <th>Conteúdo Expandido</th>
+                  <th style="width: 150px; text-align: right;">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="templateTableBody"></tbody>
+            </table>
+          </section>
+        </div>
+
+        <!-- ================= ABA 2: COMO FUNCIONA & GUIA ================= -->
+        <div id="tab-guide" class="tab-content" hidden>
+          <header class="panel-header">
+            <div>
+              <span class="eyebrow">DOCUMENTAÇÃO PRÁTICA</span>
+              <h1>Como Funciona o TextSwitch</h1>
+            </div>
+          </header>
+
+          <div class="guide-grid">
+            <!-- Card 1: Expansão de Atalhos -->
+            <article class="guide-card">
+              <div class="guide-card-icon">⚡</div>
+              <h3>1. Disparo de Atalhos</h3>
+              <p>O TextSwitch monitora a digitação nos campos de texto da página web. Quando você digita um atalho cadastrado e pressiona a tecla disparadora, ele é substituído instantaneamente.</p>
+              <div class="guide-box">
+                <span class="box-label">Gatilhos suportados:</span>
+                <div class="trigger-keys">
+                  <kbd>Espaço</kbd>
+                  <kbd>Enter</kbd>
+                  <kbd>Tab</kbd>
+                </div>
+                <small class="box-hint">Dica: Inicie seus atalhos com <code>/</code> (ex: <code>/ola</code>, <code>/pix</code>, <code>/suporte</code>) para evitar disparos acidentais durante a digitação comum.</small>
+              </div>
+            </article>
+
+            <!-- Card 2: Variáveis de Data e Hora -->
+            <article class="guide-card">
+              <div class="guide-card-icon">📅</div>
+              <h3>2. Variáveis Automáticas de Data e Hora</h3>
+              <p>Você pode inserir marcadores no texto que são resolvidos no exato milissegundo em que o atalho é expandido:</p>
+              <ul class="guide-list">
+                <li><code>{data}</code> — Insere a data atual (ex: <code>19/11/2026</code> ou <code>2026-11-19</code>).</li>
+                <li><code>{hora}</code> — Insere o horário atual (ex: <code>14:30</code> ou <code>14:30:45</code>).</li>
+              </ul>
+              <small class="box-hint">O formato de exibição da data e hora pode ser ajustado individualmente em cada template no editor.</small>
+            </article>
+
+            <!-- Card 3: Campos Dinâmicos (Estilo Text Blaze) -->
+            <article class="guide-card full-width">
+              <div class="guide-card-icon">🧩</div>
+              <h3>3. Formulários Dinâmicos Interativos & Listas de Opções</h3>
+              <p>O TextSwitch oferece um construtor integrado de campos dinâmicos. Quando você dispara um template contendo esses marcadores, uma janela modal leve em Shadow DOM surge na página para você preencher os dados antes da inserção:</p>
+              
+              <div class="syntax-grid">
+                <div class="syntax-item">
+                  <strong>Menu de Opções (Dropdown)</strong>
+                  <code>{formmenu: Opção A; Opção B; Opção C; name=Turno}</code>
+                  <p>Exibe um menu suspenso para escolher entre alternativas predefinidas.</p>
+                </div>
+
+                <div class="syntax-item">
+                  <strong>Campo de Texto Curto</strong>
+                  <code>{formtext: Nome do Cliente}</code>
+                  <p>Campo de linha única para preenchimento de nomes, códigos ou valores.</p>
+                </div>
+
+                <div class="syntax-item">
+                  <strong>Parágrafo / Multilinha</strong>
+                  <code>{formparagraph: Observações do Chamado}</code>
+                  <p>Área de texto para comentários detalhados ou laudos técnicos.</p>
+                </div>
+
+                <div class="syntax-item">
+                  <strong>Seletor de Data</strong>
+                  <code>{formdate: DD/MM/YYYY}</code>
+                  <p>Abre um calendário nativo para escolher uma data personalizada.</p>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 4: Importação e Exportação -->
+            <article class="guide-card full-width">
+              <div class="guide-card-icon">🔄</div>
+              <h3>4. Importação e Exportação sem Bloqueios</h3>
+              <p>Você é o único dono dos seus dados. Você pode fazer backup a qualquer momento e migrar facilmente de outras ferramentas:</p>
+              <div class="formats-accepted">
+                <div class="format-badge">✓ Formato Text Blaze (JSON exportado com pastas e snippets)</div>
+                <div class="format-badge">✓ Formato Nativo TextSwitch (JSON com versionamento)</div>
+                <div class="format-badge">✓ Listas Simples de Objetos JSON ([ { shortcut, text } ])</div>
+                <div class="format-badge">✓ Dicionários Chave-Valor ({ "/atalho": "Texto" })</div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <!-- ================= ABA 3: PRIVACIDADE & OPEN SOURCE ================= -->
+        <div id="tab-privacy" class="tab-content" hidden>
+          <header class="panel-header">
+            <div>
+              <span class="eyebrow">TRANSPARÊNCIA TOTAL</span>
+              <h1>Privacidade, Arquitetura Local & Open Source</h1>
+            </div>
+          </header>
+
+          <div class="privacy-pillars">
+            <div class="pillar-card">
+              <div class="pillar-icon">🏠</div>
+              <h3>100% Local no seu Navegador</h3>
+              <p>O TextSwitch não possui backend, banco de dados na nuvem ou servidores intermediários. Todos os templates, atalhos e configurações ficam gravados diretamente no armazenamento nativo do seu navegador através da API <code>chrome.storage.local</code>.</p>
+              <div class="pillar-highlight">
+                <span>Nenhum texto digitado ou snippet salvo sai do seu dispositivo. Funciona até mesmo com a internet desligada.</span>
+              </div>
+            </div>
+
+            <div class="pillar-card">
+              <div class="pillar-icon">📦</div>
+              <h3>Zero Dependências Externas</h3>
+              <p>O projeto foi construído do zero utilizando exclusivamente <strong>JavaScript Vanilla puro</strong> e APIs padrão dos navegadores Web (W3C / Manifest V3). Não utiliza frameworks pesados, pacotes npm desnecessários ou bibliotecas externas de terceiros.</p>
+              <div class="pillar-highlight">
+                <span>Máxima velocidade de execução, uso ínfimo de memória RAM e imunidade contra ataques de supply chain em pacotes externos.</span>
+              </div>
+            </div>
+
+            <div class="pillar-card">
+              <div class="pillar-icon">📖</div>
+              <h3>Código Aberto (Open Source)</h3>
+              <p>O TextSwitch é software livre sob licença permissiva MIT. Seu código-fonte é 100% aberto, transparente e auditável por qualquer desenvolvedor ou equipe de segurança.</p>
+              <div class="pillar-highlight">
+                <span>Sem versões "Pro" pagas, sem assinaturas recorrentes, sem bloqueio de quantidade de snippets e sem anúncios.</span>
+              </div>
+            </div>
+
+            <div class="pillar-card">
+              <div class="pillar-icon">🛡️</div>
+              <h3>Privacidade por Design (Zero Telemetria)</h3>
+              <p>Diferente de muitas extensões comerciais que coletam métricas de digitação, telemetria analítica ou histórico de uso, o TextSwitch tem zero rastreadores:</p>
+              <ul class="pillar-checks">
+                <li>❌ Sem Google Analytics, Mixpanel ou trackers de terceiros.</li>
+                <li>❌ Sem envio de logs de erros para a nuvem.</li>
+                <li>❌ Sem necessidade de login, conta ou e-mail para utilizar.</li>
+                <li>✓ Permissões mínimas no manifesto (apenas <code>storage</code>).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Modal de Criação / Edição -->
+    <dialog id="editorModal">
+      <form id="templateForm" method="dialog">
+        <div class="modal-header">
+          <div>
+            <span class="eyebrow">EDITOR TEXTSWITCH</span>
+            <h2 id="modalTitle">Criar Template</h2>
+          </div>
+          <button id="closeModalBtn" class="btn-close" type="button" aria-label="Fechar">✕</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="form-row">
+            <label class="form-group flex-2">
+              <span class="label-text">Nome do template</span>
+              <input
+                id="titleInput"
+                type="text"
+                required
+                placeholder="Ex.: Resposta de Atendimento"
+                autocomplete="off"
+              />
+            </label>
+
+            <label class="form-group flex-1">
+              <span class="label-text">Atalho de disparo</span>
+              <input
+                id="shortcutInput"
+                type="text"
+                required
+                placeholder="/resposta ou /suporte"
+                autocomplete="off"
+              />
+            </label>
+          </div>
+
+          <!-- Seção de Variáveis e Campos Dinâmicos -->
+          <fieldset class="variables-picker">
+            <legend>Variáveis & Campos Dinâmicos</legend>
+
+            <!-- Barra de Inserção Rápida -->
+            <div class="token-toolbar">
+              <span class="token-toolbar-label">Inserir no texto:</span>
+              <div class="token-buttons">
+                <button type="button" class="btn-token" data-token="{data}" title="Inserir a data atual no texto">+ Data</button>
+                <button type="button" class="btn-token" data-token="{hora}" title="Inserir o horário atual no texto">+ Hora</button>
+                <button type="button" class="btn-token" id="btnOpenTextBuilder" title="Inserir um campo para preencher texto na hora">+ Campo de Texto</button>
+                <button type="button" class="btn-token" id="btnOpenParagraphBuilder" title="Inserir uma área de texto multilinha">+ Parágrafo</button>
+                <button type="button" class="btn-token highlight-token" id="btnOpenMenuBuilder" title="Criar uma lista de opções suspensa para escolher na hora">+ Lista de Opções (Menu)</button>
+              </div>
+            </div>
+
+            <!-- Construtor de Lista de Opções (Menu Dropdown) -->
+            <div id="menuBuilderBox" class="builder-box" hidden>
+              <div class="builder-box-head">
+                <strong>📋 Adicionar Lista de Opções (Menu Dropdown)</strong>
+                <button type="button" class="btn-close-mini" id="btnCloseMenuBuilder">✕</button>
+              </div>
+              <div class="builder-inputs">
+                <label class="builder-input-group">
+                  <span>Nome da Lista / Rótulo</span>
+                  <input type="text" id="menuNameInput" placeholder="Ex.: Turno, Forma de Pagamento, Status" autocomplete="off" />
+                </label>
+                <label class="builder-input-group">
+                  <span>Opções da Lista (separadas por vírgula)</span>
+                  <input type="text" id="menuOptionsInput" placeholder="Ex.: Manhã, Tarde, Noite" autocomplete="off" />
+                </label>
+              </div>
+              <div class="builder-box-foot">
+                <small>Ao disparar o atalho, uma janela permitirá escolher uma dessas opções.</small>
+                <button type="button" class="btn btn-sm primary" id="btnInsertMenu">Inserir Menu no Texto</button>
+              </div>
+            </div>
+
+            <!-- Construtor de Campo de Texto Simples -->
+            <div id="textBuilderBox" class="builder-box" hidden>
+              <div class="builder-box-head">
+                <strong>✏️ Adicionar Campo de Texto</strong>
+                <button type="button" class="btn-close-mini" id="btnCloseTextBuilder">✕</button>
+              </div>
+              <div class="builder-inputs">
+                <label class="builder-input-group">
+                  <span>Nome do Campo / Pergunta</span>
+                  <input type="text" id="customTextFieldInput" placeholder="Ex.: Nome do Cliente, Número do Pedido" autocomplete="off" />
+                </label>
+              </div>
+              <div class="builder-box-foot">
+                <small>Será exibido um campo para preencher esse valor na hora do envio.</small>
+                <button type="button" class="btn btn-sm primary" id="btnInsertCustomText">Inserir Campo de Texto</button>
+              </div>
+            </div>
+
+            <!-- Formatos Compactos de Data e Hora -->
+            <div class="formats-compact">
+              <label>
+                <span>Formato de Data ({data}):</span>
+                <select id="dateFormat">
+                  <option value="dd/mm/yyyy">DD/MM/AAAA (ex: 19/11/2026)</option>
+                  <option value="yyyy-mm-dd">AAAA-MM-DD (ex: 2026-11-19)</option>
+                  <option value="month">Por extenso (ex: 19 de novembro de 2026)</option>
+                </select>
+              </label>
+
+              <label>
+                <span>Formato de Hora ({hora}):</span>
+                <select id="timeFormat">
+                  <option value="hh:mm">HH:MM (24 horas)</option>
+                  <option value="hh:mm:ss">HH:MM:SS (Com segundos)</option>
+                </select>
+              </label>
+            </div>
+          </fieldset>
+
+          <label class="form-group">
+            <span class="label-text">Texto a expandir</span>
+            <textarea
+              id="textInput"
+              required
+              rows="10"
+              placeholder="Digite o texto completo do template. Você pode clicar nos botões acima para inserir variáveis e menus..."
+            ></textarea>
+          </label>
+        </div>
+
+        <div class="modal-footer">
+          <button id="cancelBtn" class="btn" type="button">Cancelar</button>
+          <button class="btn primary" type="submit">Salvar Template</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div id="toast" class="toast" role="status"></div>
+
+    <script src="../shared/templates.js"></script>
+    <script src="../shared/storage.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>
