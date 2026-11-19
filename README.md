@@ -6,6 +6,55 @@ O **TextSwitch** é uma extensão aberta, leve, 100% local e focada em privacida
 
 ---
 
+## 🤖 Projeto de Estudo & Engenharia de Software com IA
+
+Este projeto foi idealizado e desenvolvido como um **projeto de estudo em engenharia de software**, com foco em:
+- **Clean Architecture & Clean Code**: Separação clara de responsabilidades entre regras de negócio puras (`shared/templates.js`), persistência assíncrona (`shared/storage.js`), UI de popup, opções e injeção em páginas (`content.js`).
+- **Arquitetura Chrome Manifest V3**: Aderência completa aos novos padrões do ecossistema Chrome Extensions, com permissões mínimas e seguras (`storage`, `activeTab`), sem scripts inline e sem dependências de frameworks pesados.
+- **Desenvolvimento Assistido por Inteligência Artificial**: Criado com auxílio de Inteligência Artificial generativa, utilizada como parceira de engenharia no refinamento arquitetural, refatoração de código legado, criação de testes unitários automatizados, geração de documentação e concepção da identidade visual/SVG.
+- **Zero-Dependency Vanilla Web**: Demonstração de como construir interfaces reativas e modais ricas utilizando apenas HTML5, CSS moderno (CSS Grid, Flexbox, custom properties) e Vanilla JS nativo.
+
+---
+
+## 📸 Telas da Extensão
+
+### 1. Painel de Gerenciamento de Templates
+Visão geral dos atalhos cadastrados, com busca instantânea, estatísticas e atalhos rápidos de edição, exclusão e visualização de conteúdo.
+
+![Painel de Templates](docs/screenshots/dashboard-templates.png)
+
+---
+
+### 2. Editor de Templates com Construtor de Variáveis e Menus
+Crie snippets com inserção rápida de data, hora, campos de texto e listas dropdown (`{formmenu}`). Permite testar a pré-visualização e disparadores de tecla com precisão.
+
+![Editor de Templates](docs/screenshots/editor-variables.png)
+
+---
+
+### 3. Guia de Funcionamento e Sintaxe de Variáveis
+Aba explicativa completa com passo a passo de como disparar os atalhos em qualquer campo web e a documentação detalhada de cada token dinâmico.
+
+![Como Funciona & Variáveis](docs/screenshots/how-it-works.png)
+
+---
+
+### 4. Transparência, Privacidade e Arquitetura 100% Local
+Garantia de que nenhum dado trafega pela rede: todo o armazenamento e processamento acontecem exclusivamente na máquina do usuário via `chrome.storage.local`.
+
+![Privacidade e Arquitetura Local](docs/screenshots/privacy-local.png)
+
+---
+
+### 5. Popup Rápido de Acesso
+Acesse seus atalhos com 1 clique na barra do navegador, faça pesquisas instantâneas, arraste arquivos JSON para importação ou abra a tela cheia de configurações.
+
+<div align="center">
+  <img src="docs/screenshots/popup-view.png" alt="Popup do TextSwitch" width="460" />
+</div>
+
+---
+
 ## 🛡️ Privacidade, Zero Dependências e Open Source
 
 - **100% Local no Navegador**: O TextSwitch não envia nenhum dado ou texto para servidores externos. Todo o armazenamento é mantido localmente na máquina do usuário através de `chrome.storage.local`.
@@ -54,11 +103,15 @@ O TextSwitch traz uma identidade visual moderna com paleta de gradiente vibrante
 ```
 extensão/
 ├── .gitignore              # Regras de exclusão do Git
-├── README.md               # Documentação técnica e guia de instalação
+├── README.md               # Documentação técnica, telas e guia de instalação
 ├── package.json            # Scripts npm ("build" e "test")
 ├── build.js                # Script de compilação e validação do manifest.json
+├── docs/                   # Documentação visual do projeto
+│   └── screenshots/        # Capturas de tela da extensão em alta resolução
 ├── examples/               # Exemplos e fixtures de importação universais
 │   └── text-blaze-sample.json
+├── scripts/                # Scripts utilitários de desenvolvimento
+│   └── capture-screenshots.js # Automação headless do Chrome para capturar telas
 ├── src/                    # Código-fonte da extensão
 │   ├── manifest.json       # Manifesto Chrome V3 devidamente configurado
 │   ├── icon.svg            # Ícone vetorial master
